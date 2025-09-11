@@ -8,7 +8,7 @@ import { Slider } from './ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Badge } from './ui/badge';
 import { User } from '../types';
-import { useGeolocation } from '../../hooks/useGeolocation';
+import { useGeolocation } from '../hooks/useGeolocation';
 import { 
   MapPin, 
   Home, 

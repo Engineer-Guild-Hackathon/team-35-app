@@ -4,8 +4,8 @@ import { Button } from './ui/button';
 import { Progress } from './ui/progress';
 import { Badge } from './ui/badge';
 import { User, Word, VocabularySong } from '../types';
-import { mockWords, mockSongs } from '../../data/mockData';
-import { useGeolocation } from '../../hooks/useGeolocation';
+import { mockWords, mockSongs } from '../data/mockData';
+import { useGeolocation } from '../hooks/useGeolocation';
 import { 
   Music, 
   BookOpen, 

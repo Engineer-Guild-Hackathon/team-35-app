@@ -5,7 +5,7 @@ import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Progress } from './ui/progress';
 import { VocabularySong } from '../types';
-import { mockSongs, mockWords } from '../../data/mockData';
+import { mockSongs, mockWords } from '../data/mockData';
 import { 
   Play, 
   Pause, 

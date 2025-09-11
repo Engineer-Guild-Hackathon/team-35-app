@@ -6,7 +6,7 @@ import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Word } from '../types';
-import { mockWords } from '../../data/mockData';
+import { mockWords } from '../data/mockData';
 import { 
   Search, 
   Plus, 
