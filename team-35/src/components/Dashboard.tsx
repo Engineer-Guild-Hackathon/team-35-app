@@ -1,22 +1,28 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Progress } from './ui/progress';
-import { Badge } from './ui/badge';
-import { User, Word, VocabularySong } from '../types';
-import { mockWords, mockSongs } from '../data/mockData';
-import { useGeolocation } from '../hooks/useGeolocation';
-import { 
-  Music, 
-  BookOpen, 
-  MapPin, 
-  TrendingUp, 
-  Play, 
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Button } from "./ui/button";
+import { Progress } from "./ui/progress";
+import { Badge } from "./ui/badge";
+import { User, Word, VocabularySong } from "../types";
+import { mockWords, mockSongs } from "../data/mockData";
+import { useGeolocation } from "../hooks/useGeolocation";
+import {
+  Music,
+  BookOpen,
+  MapPin,
+  TrendingUp,
+  Play,
   Home,
   Clock,
   Target,
-  Zap
-} from 'lucide-react';
+  Zap,
+} from "lucide-react";
 
 interface DashboardProps {
   user: User;
@@ -41,11 +47,12 @@ export const Dashboard = ({ user }: DashboardProps) => {
     }
   }, [latitude, longitude, user.homeLocation, isNearHome, songs]);
 
-  const todayWords = words.filter(word => 
-    word.masteryLevel < 70 || !word.lastReviewed
-  ).slice(0, 5);
+  const todayWords = words
+    .filter((word) => word.masteryLevel < 70 || !word.lastReviewed)
+    .slice(0, 5);
 
-  const averageMastery = words.reduce((sum, word) => sum + word.masteryLevel, 0) / words.length;
+  const averageMastery =
+    words.reduce((sum, word) => sum + word.masteryLevel, 0) / words.length;
 
   const playVocabularySong = (song: VocabularySong) => {
     setCurrentSong(song);
@@ -117,11 +124,15 @@ export const Dashboard = ({ user }: DashboardProps) => {
             </div>
             <div className="grid grid-cols-2 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-blue-600">{words.length}</div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {words.length}
+                </div>
                 <div className="text-sm text-gray-600">登録単語</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-purple-600">{songs.length}</div>
+                <div className="text-2xl font-bold text-purple-600">
+                  {songs.length}
+                </div>
                 <div className="text-sm text-gray-600">楽曲数</div>
               </div>
             </div>
@@ -177,7 +188,10 @@ export const Dashboard = ({ user }: DashboardProps) => {
         <CardContent>
           <div className="space-y-3">
             {todayWords.map((word) => (
-              <div key={word.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div
+                key={word.id}
+                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+              >
                 <div className="flex-1">
                   <div className="flex items-center space-x-3">
                     <div>
@@ -206,14 +220,15 @@ export const Dashboard = ({ user }: DashboardProps) => {
             <Music className="h-5 w-5" />
             <span>ボキャブラリーソング</span>
           </CardTitle>
-          <CardDescription>
-            あなたの単語が組み込まれた楽曲一覧
-          </CardDescription>
+          <CardDescription>あなたの単語が組み込まれた楽曲一覧</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {songs.map((song) => (
-              <div key={song.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+              <div
+                key={song.id}
+                className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+              >
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h4 className="font-medium">{song.title}</h4>
@@ -224,7 +239,8 @@ export const Dashboard = ({ user }: DashboardProps) => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center text-sm text-gray-600">
                     <Clock className="h-4 w-4 mr-1" />
-                    {Math.floor(song.duration / 60)}:{(song.duration % 60).toString().padStart(2, '0')}
+                    {Math.floor(song.duration / 60)}:
+                    {(song.duration % 60).toString().padStart(2, "0")}
                   </div>
                   <Button
                     onClick={() => playVocabularySong(song)}

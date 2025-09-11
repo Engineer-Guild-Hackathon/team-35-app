@@ -1,28 +1,40 @@
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Switch } from './ui/switch';
-import { Slider } from './ui/slider';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Badge } from './ui/badge';
-import { User } from '../types';
-import { useGeolocation } from '../hooks/useGeolocation';
-import { 
-  MapPin, 
-  Home, 
-  Volume2, 
-  Bell, 
-  User as UserIcon, 
-  Settings, 
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Switch } from "./ui/switch";
+import { Slider } from "./ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { Badge } from "./ui/badge";
+import { User } from "../types";
+import { useGeolocation } from "../hooks/useGeolocation";
+import {
+  MapPin,
+  Home,
+  Volume2,
+  Bell,
+  User as UserIcon,
+  Settings,
   Shield,
   Download,
   Moon,
   Sun,
   Globe,
-  Smartphone
-} from 'lucide-react';
+  Smartphone,
+} from "lucide-react";
 
 interface SettingsScreenProps {
   user: User;
@@ -35,40 +47,42 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
     // Audio Settings
     autoPlay: true,
     volume: [80],
-    musicGenre: 'all',
-    
+    musicGenre: "all",
+
     // Notification Settings
     geofenceNotifications: true,
     learningReminders: true,
     dailyGoalReminders: true,
-    
+
     // Location Settings
     geofenceEnabled: true,
     homeRadius: [100], // meters
-    
+
     // App Settings
     darkMode: false,
-    language: 'ja',
+    language: "ja",
     offlineMode: false,
-    
+
     // Learning Settings
     dailyWordGoal: 5,
-    difficultyLevel: 'intermediate',
-    reviewInterval: 'daily',
+    difficultyLevel: "intermediate",
+    reviewInterval: "daily",
   });
 
-  const [homeAddress, setHomeAddress] = useState('');
+  const [homeAddress, setHomeAddress] = useState("");
   const [isSettingHome, setIsSettingHome] = useState(false);
 
   const handleSettingChange = (key: string, value: any) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
+    setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
   const setCurrentLocationAsHome = async () => {
     if (latitude && longitude) {
       setIsSettingHome(true);
       // In real app, reverse geocoding would be done here
-      setHomeAddress(`緯度: ${latitude.toFixed(4)}, 経度: ${longitude.toFixed(4)}`);
+      setHomeAddress(
+        `緯度: ${latitude.toFixed(4)}, 経度: ${longitude.toFixed(4)}`
+      );
       setTimeout(() => {
         setIsSettingHome(false);
       }, 1000);
@@ -77,7 +91,7 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
 
   const testGeofence = () => {
     // Test geofence functionality
-    alert('ジオフェンス機能をテストしました。帰宅時に自動再生が開始されます。');
+    alert("ジオフェンス機能をテストしました。帰宅時に自動再生が開始されます。");
   };
 
   return (
@@ -111,9 +125,11 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
                 <Label>学習レベル</Label>
                 <p className="text-sm text-gray-600">現在の難易度設定</p>
               </div>
-              <Select 
+              <Select
                 value={settings.difficultyLevel}
-                onValueChange={(value) => handleSettingChange('difficultyLevel', value)}
+                onValueChange={(value) =>
+                  handleSettingChange("difficultyLevel", value)
+                }
               >
                 <SelectTrigger className="w-32">
                   <SelectValue />
@@ -130,11 +146,13 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
                 <Label>1日の目標単語数</Label>
                 <p className="text-sm text-gray-600">学習目標を設定</p>
               </div>
-              <Input 
-                type="number" 
+              <Input
+                type="number"
                 className="w-20"
                 value={settings.dailyWordGoal}
-                onChange={(e) => handleSettingChange('dailyWordGoal', parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleSettingChange("dailyWordGoal", parseInt(e.target.value))
+                }
               />
             </div>
           </CardContent>
@@ -147,9 +165,7 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
               <MapPin className="h-5 w-5" />
               <span>位置・ジオフェンス設定</span>
             </CardTitle>
-            <CardDescription>
-              自宅位置の設定と自動再生機能
-            </CardDescription>
+            <CardDescription>自宅位置の設定と自動再生機能</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
@@ -159,7 +175,9 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
               </div>
               <Switch
                 checked={settings.geofenceEnabled}
-                onCheckedChange={(checked) => handleSettingChange('geofenceEnabled', checked)}
+                onCheckedChange={(checked) =>
+                  handleSettingChange("geofenceEnabled", checked)
+                }
               />
             </div>
 
@@ -168,12 +186,12 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
                 <div>
                   <Label>自宅住所</Label>
                   <div className="flex space-x-2 mt-2">
-                    <Input 
+                    <Input
                       placeholder="住所を入力またはGPSで設定"
                       value={homeAddress}
                       onChange={(e) => setHomeAddress(e.target.value)}
                     />
-                    <Button 
+                    <Button
                       onClick={setCurrentLocationAsHome}
                       disabled={!latitude || !longitude || isSettingHome}
                       variant="outline"
@@ -192,7 +210,9 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
                   <Label>検出範囲: {settings.homeRadius[0]}m</Label>
                   <Slider
                     value={settings.homeRadius}
-                    onValueChange={(value) => handleSettingChange('homeRadius', value)}
+                    onValueChange={(value) =>
+                      handleSettingChange("homeRadius", value)
+                    }
                     max={500}
                     min={50}
                     step={25}
@@ -204,7 +224,11 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
                   </div>
                 </div>
 
-                <Button onClick={testGeofence} variant="outline" className="w-full">
+                <Button
+                  onClick={testGeofence}
+                  variant="outline"
+                  className="w-full"
+                >
                   ジオフェンス機能をテスト
                 </Button>
               </>
@@ -228,7 +252,9 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
               </div>
               <Switch
                 checked={settings.autoPlay}
-                onCheckedChange={(checked) => handleSettingChange('autoPlay', checked)}
+                onCheckedChange={(checked) =>
+                  handleSettingChange("autoPlay", checked)
+                }
               />
             </div>
 
@@ -236,7 +262,7 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
               <Label>音量: {settings.volume[0]}%</Label>
               <Slider
                 value={settings.volume}
-                onValueChange={(value) => handleSettingChange('volume', value)}
+                onValueChange={(value) => handleSettingChange("volume", value)}
                 max={100}
                 min={0}
                 step={5}
@@ -247,11 +273,15 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
             <div className="flex items-center justify-between">
               <div>
                 <Label>好みの音楽ジャンル</Label>
-                <p className="text-sm text-gray-600">生成される楽曲のスタイル</p>
+                <p className="text-sm text-gray-600">
+                  生成される楽曲のスタイル
+                </p>
               </div>
-              <Select 
+              <Select
                 value={settings.musicGenre}
-                onValueChange={(value) => handleSettingChange('musicGenre', value)}
+                onValueChange={(value) =>
+                  handleSettingChange("musicGenre", value)
+                }
               >
                 <SelectTrigger className="w-32">
                   <SelectValue />
@@ -283,7 +313,9 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
               </div>
               <Switch
                 checked={settings.geofenceNotifications}
-                onCheckedChange={(checked) => handleSettingChange('geofenceNotifications', checked)}
+                onCheckedChange={(checked) =>
+                  handleSettingChange("geofenceNotifications", checked)
+                }
               />
             </div>
 
@@ -294,7 +326,9 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
               </div>
               <Switch
                 checked={settings.learningReminders}
-                onCheckedChange={(checked) => handleSettingChange('learningReminders', checked)}
+                onCheckedChange={(checked) =>
+                  handleSettingChange("learningReminders", checked)
+                }
               />
             </div>
 
@@ -305,7 +339,9 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
               </div>
               <Switch
                 checked={settings.dailyGoalReminders}
-                onCheckedChange={(checked) => handleSettingChange('dailyGoalReminders', checked)}
+                onCheckedChange={(checked) =>
+                  handleSettingChange("dailyGoalReminders", checked)
+                }
               />
             </div>
 
@@ -314,9 +350,11 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
                 <Label>復習間隔</Label>
                 <p className="text-sm text-gray-600">単語の復習頻度</p>
               </div>
-              <Select 
+              <Select
                 value={settings.reviewInterval}
-                onValueChange={(value) => handleSettingChange('reviewInterval', value)}
+                onValueChange={(value) =>
+                  handleSettingChange("reviewInterval", value)
+                }
               >
                 <SelectTrigger className="w-32">
                   <SelectValue />
@@ -347,7 +385,9 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
               </div>
               <Switch
                 checked={settings.darkMode}
-                onCheckedChange={(checked) => handleSettingChange('darkMode', checked)}
+                onCheckedChange={(checked) =>
+                  handleSettingChange("darkMode", checked)
+                }
               />
             </div>
 
@@ -356,9 +396,11 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
                 <Label>言語</Label>
                 <p className="text-sm text-gray-600">アプリの表示言語</p>
               </div>
-              <Select 
+              <Select
                 value={settings.language}
-                onValueChange={(value) => handleSettingChange('language', value)}
+                onValueChange={(value) =>
+                  handleSettingChange("language", value)
+                }
               >
                 <SelectTrigger className="w-32">
                   <SelectValue />
@@ -373,11 +415,15 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
             <div className="flex items-center justify-between">
               <div>
                 <Label>オフラインモード</Label>
-                <p className="text-sm text-gray-600">ダウンロード済み楽曲のみ</p>
+                <p className="text-sm text-gray-600">
+                  ダウンロード済み楽曲のみ
+                </p>
               </div>
               <Switch
                 checked={settings.offlineMode}
-                onCheckedChange={(checked) => handleSettingChange('offlineMode', checked)}
+                onCheckedChange={(checked) =>
+                  handleSettingChange("offlineMode", checked)
+                }
               />
             </div>
           </CardContent>
@@ -396,17 +442,13 @@ export const SettingsScreen = ({ user, onLogout }: SettingsScreenProps) => {
               <Download className="h-4 w-4 mr-2" />
               データをエクスポート
             </Button>
-            
+
             <Button variant="outline" className="w-full justify-start">
               <Shield className="h-4 w-4 mr-2" />
               プライバシー設定
             </Button>
 
-            <Button 
-              variant="destructive" 
-              onClick={onLogout}
-              className="w-full"
-            >
+            <Button variant="destructive" onClick={onLogout} className="w-full">
               ログアウト
             </Button>
           </CardContent>

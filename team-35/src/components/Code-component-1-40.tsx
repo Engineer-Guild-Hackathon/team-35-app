@@ -1,25 +1,31 @@
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Progress } from './ui/progress';
-import { VocabularySong } from '../types';
-import { mockSongs, mockWords } from '../data/mockData';
-import { 
-  Play, 
-  Pause, 
-  Music, 
-  Clock, 
-  User, 
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Progress } from "./ui/progress";
+import { VocabularySong } from "../types";
+import { mockSongs, mockWords } from "../data/mockData";
+import {
+  Play,
+  Pause,
+  Music,
+  Clock,
+  User,
   Volume2,
   Shuffle,
   SkipForward,
   Heart,
   Download,
   Share,
-  Eye
-} from 'lucide-react';
+  Eye,
+} from "lucide-react";
 
 interface SongsScreenProps {
   onNavigate: (screen: string) => void;
@@ -44,21 +50,25 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
   };
 
   const getWordsInSong = (song: VocabularySong) => {
-    return mockWords.filter(word => song.words.includes(word.id));
+    return mockWords.filter((word) => song.words.includes(word.id));
   };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const getGenreColor = (genre: string) => {
     switch (genre) {
-      case 'jpop': return 'bg-pink-100 text-pink-800';
-      case 'chill': return 'bg-blue-100 text-blue-800';
-      case 'acoustic': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "jpop":
+        return "bg-pink-100 text-pink-800";
+      case "chill":
+        return "bg-blue-100 text-blue-800";
+      case "acoustic":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -67,7 +77,11 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
     const isCurrentSong = currentSong?.id === song.id;
 
     return (
-      <Card className={`hover:shadow-md transition-all ${isCurrentSong ? 'ring-2 ring-blue-500' : ''}`}>
+      <Card
+        className={`hover:shadow-md transition-all ${
+          isCurrentSong ? "ring-2 ring-blue-500" : ""
+        }`}
+      >
         <CardContent className="p-6">
           <div className="flex items-start space-x-4">
             {/* Album Art Placeholder */}
@@ -82,7 +96,7 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
                 <User className="h-4 w-4" />
                 <span>{song.artist}</span>
               </p>
-              
+
               <div className="flex items-center space-x-3 mt-2">
                 <Badge className={getGenreColor(song.genre)}>
                   {song.genre}
@@ -119,15 +133,17 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
                   <Play className="h-5 w-5" />
                 )}
               </Button>
-              
+
               <div className="flex space-x-1">
                 <Button variant="ghost" size="sm">
                   <Heart className="h-4 w-4" />
                 </Button>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="sm"
-                  onClick={() => setShowLyrics(showLyrics === song.id ? null : song.id)}
+                  onClick={() =>
+                    setShowLyrics(showLyrics === song.id ? null : song.id)
+                  }
                 >
                   <Eye className="h-4 w-4" />
                 </Button>
@@ -155,16 +171,20 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
   };
 
   // Filter songs by genre
-  const jpopSongs = songs.filter(song => song.genre === 'jpop');
-  const chillSongs = songs.filter(song => song.genre === 'chill');
-  const acousticSongs = songs.filter(song => song.genre === 'acoustic');
+  const jpopSongs = songs.filter((song) => song.genre === "jpop");
+  const chillSongs = songs.filter((song) => song.genre === "chill");
+  const acousticSongs = songs.filter((song) => song.genre === "acoustic");
 
   return (
     <div className="space-y-6 p-4 max-w-4xl mx-auto">
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">ボキャブラリーソング</h1>
-        <p className="text-gray-600">あなたの単語が組み込まれた楽曲で楽しく学習</p>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          ボキャブラリーソング
+        </h1>
+        <p className="text-gray-600">
+          あなたの単語が組み込まれた楽曲で楽しく学習
+        </p>
       </div>
 
       {/* Current Player */}
@@ -185,8 +205,8 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
                 <h3 className="font-medium">{currentSong.title}</h3>
                 <p className="text-sm text-gray-600">{currentSong.artist}</p>
                 <div className="mt-2">
-                  <Progress 
-                    value={(currentTime / currentSong.duration) * 100} 
+                  <Progress
+                    value={(currentTime / currentSong.duration) * 100}
                     className="h-2"
                   />
                   <div className="flex justify-between text-xs text-gray-500 mt-1">
@@ -199,12 +219,16 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
                 <Button variant="ghost" size="sm">
                   <Shuffle className="h-4 w-4" />
                 </Button>
-                <Button 
+                <Button
                   onClick={() => playSong(currentSong)}
                   variant="default"
                   size="sm"
                 >
-                  {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                  {isPlaying ? (
+                    <Pause className="h-4 w-4" />
+                  ) : (
+                    <Play className="h-4 w-4" />
+                  )}
                 </Button>
                 <Button variant="ghost" size="sm">
                   <SkipForward className="h-4 w-4" />
@@ -231,7 +255,9 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
           <CardContent className="p-4 text-center">
             <Clock className="h-8 w-8 mx-auto mb-2 text-blue-600" />
             <div className="text-2xl font-bold">
-              {Math.floor(songs.reduce((sum, song) => sum + song.duration, 0) / 60)}
+              {Math.floor(
+                songs.reduce((sum, song) => sum + song.duration, 0) / 60
+              )}
             </div>
             <div className="text-sm text-gray-600">総再生時間（分）</div>
           </CardContent>
@@ -251,7 +277,9 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
           <TabsTrigger value="all">すべて ({songs.length})</TabsTrigger>
           <TabsTrigger value="jpop">J-POP ({jpopSongs.length})</TabsTrigger>
           <TabsTrigger value="chill">Chill ({chillSongs.length})</TabsTrigger>
-          <TabsTrigger value="acoustic">Acoustic ({acousticSongs.length})</TabsTrigger>
+          <TabsTrigger value="acoustic">
+            Acoustic ({acousticSongs.length})
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="mt-6 space-y-4">
@@ -282,7 +310,9 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
       {/* Info Card */}
       <Card className="border-l-4 border-l-green-500">
         <CardHeader>
-          <CardTitle className="text-lg">ボキャブラリーソングについて</CardTitle>
+          <CardTitle className="text-lg">
+            ボキャブラリーソングについて
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3 text-sm text-gray-700">
