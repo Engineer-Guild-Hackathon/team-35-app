@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { User } from '../types';
 
 // Mock Firebase auth for demo purposes
@@ -8,10 +8,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     // Simulate Firebase auth check
-    const savedUser = localStorage.getItem('mimicoach_user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+    try { const savedUser = localStorage.getItem('mimicoach_user'); if (savedUser) { try { setUser(JSON.parse(savedUser)); } catch { localStorage.removeItem('mimicoach_user'); setUser(null); } } } finally { }
     setLoading(false);
   }, []);
 
