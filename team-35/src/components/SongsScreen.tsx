@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -77,11 +77,7 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
     const isCurrentSong = currentSong?.id === song.id;
 
     return (
-      <Card
-        className={`hover:shadow-md transition-all ${
-          isCurrentSong ? "ring-2 ring-blue-500" : ""
-        }`}
-      >
+      <Card className={`hover:shadow-md transition-all ${isCurrentSong ? "ring-2 ring-blue-500" : ""}`}>
         <CardContent className="p-6">
           <div className="flex items-start space-x-4">
             {/* Album Art Placeholder */}
@@ -92,16 +88,14 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
             {/* Song Info */}
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-lg truncate">{song.title}</h3>
-              <p className="text-gray-600 flex items-center space-x-1">
+              <p className="text-muted-foreground flex items-center space-x-1">
                 <User className="h-4 w-4" />
                 <span>{song.artist}</span>
               </p>
 
               <div className="flex items-center space-x-3 mt-2">
-                <Badge className={getGenreColor(song.genre)}>
-                  {song.genre}
-                </Badge>
-                <div className="flex items-center text-sm text-gray-500">
+                <Badge className={getGenreColor(song.genre)}>{song.genre}</Badge>
+                <div className="flex items-center text-sm text-muted-foreground">
                   <Clock className="h-4 w-4 mr-1" />
                   {formatTime(song.duration)}
                 </div>
@@ -109,7 +103,7 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
 
               {/* Words in Song */}
               <div className="mt-3">
-                <p className="text-sm text-gray-600 mb-2">含まれる単語:</p>
+                <p className="text-sm text-muted-foreground mb-2">含まれる単語</p>
                 <div className="flex flex-wrap gap-2">
                   {wordsInSong.map((word) => (
                     <Badge key={word.id} variant="outline" className="text-xs">
@@ -122,47 +116,30 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
 
             {/* Controls */}
             <div className="flex flex-col items-end space-y-2">
-              <Button
-                onClick={() => playSong(song)}
-                className="h-12 w-12 rounded-full"
-                variant={isCurrentSong && isPlaying ? "secondary" : "default"}
-              >
-                {isCurrentSong && isPlaying ? (
-                  <Pause className="h-5 w-5" />
-                ) : (
-                  <Play className="h-5 w-5" />
-                )}
+              <Button onClick={() => playSong(song)} className="h-12 w-12 rounded-full" variant={isCurrentSong && isPlaying ? "secondary" : "default"}>
+                {isCurrentSong && isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
               </Button>
-
-              <div className="flex space-x-1">
-                <Button variant="ghost" size="sm">
+              <div className="flex items-center space-x-2">
+                <Button variant="ghost" size="icon">
                   <Heart className="h-4 w-4" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() =>
-                    setShowLyrics(showLyrics === song.id ? null : song.id)
-                  }
-                >
-                  <Eye className="h-4 w-4" />
+                <Button variant="ghost" size="icon">
+                  <Download className="h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="icon">
                   <Share className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="icon" onClick={() => setShowLyrics(showLyrics === song.id ? null : song.id)}>
+                  <Eye className="h-4 w-4" />
                 </Button>
               </div>
             </div>
           </div>
 
-          {/* Lyrics Display */}
+          {/* Lyrics */}
           {showLyrics === song.id && (
-            <div className="mt-4 pt-4 border-t">
-              <h4 className="font-medium mb-3">歌詞</h4>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <pre className="whitespace-pre-wrap text-sm leading-relaxed font-sans">
-                  {song.lyrics}
-                </pre>
-              </div>
+            <div className="mt-4 p-3 rounded-md bg-muted">
+              <p className="text-sm text-muted-foreground">歌詞プレビュー（ダミー）</p>
             </div>
           )}
         </CardContent>
@@ -170,73 +147,43 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
     );
   };
 
-  // Filter songs by genre
-  const jpopSongs = songs.filter((song) => song.genre === "jpop");
-  const chillSongs = songs.filter((song) => song.genre === "chill");
-  const acousticSongs = songs.filter((song) => song.genre === "acoustic");
+  const jpopSongs = songs.filter((s) => s.genre === 'jpop');
+  const chillSongs = songs.filter((s) => s.genre === 'chill');
+  const acousticSongs = songs.filter((s) => s.genre === 'acoustic');
 
   return (
     <div className="space-y-6 p-4 max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          ボキャブラリーソング
-        </h1>
-        <p className="text-gray-600">
-          あなたの単語が組み込まれた楽曲で楽しく学習
-        </p>
-      </div>
-
-      {/* Current Player */}
+      {/* Now Playing Bar */}
       {currentSong && (
-        <Card className="border-l-4 border-l-blue-500">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Music className="h-5 w-5" />
-              <span>再生中</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-br from-purple-400 to-blue-500 rounded-lg w-12 h-12 flex items-center justify-center">
-                <Music className="h-6 w-6 text-white" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-medium">{currentSong.title}</h3>
-                <p className="text-sm text-gray-600">{currentSong.artist}</p>
-                <div className="mt-2">
-                  <Progress
-                    value={(currentTime / currentSong.duration) * 100}
-                    className="h-2"
-                  />
-                  <div className="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>{formatTime(currentTime)}</span>
-                    <span>{formatTime(currentSong.duration)}</span>
-                  </div>
+        <Card>
+          <CardContent className="p-4 flex items-center space-x-4">
+            <div className="bg-gradient-to-br from-purple-400 to-blue-500 rounded-lg w-12 h-12 flex items-center justify-center">
+              <Music className="h-6 w-6 text-white" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-medium">{currentSong.title}</h3>
+              <p className="text-sm text-muted-foreground">{currentSong.artist}</p>
+              <div className="mt-2">
+                <Progress value={(currentTime / currentSong.duration) * 100} className="h-2" />
+                <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                  <span>{formatTime(currentTime)}</span>
+                  <span>{formatTime(currentSong.duration)}</span>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <Button variant="ghost" size="sm">
-                  <Shuffle className="h-4 w-4" />
-                </Button>
-                <Button
-                  onClick={() => playSong(currentSong)}
-                  variant="default"
-                  size="sm"
-                >
-                  {isPlaying ? (
-                    <Pause className="h-4 w-4" />
-                  ) : (
-                    <Play className="h-4 w-4" />
-                  )}
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <SkipForward className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Volume2 className="h-4 w-4" />
-                </Button>
-              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button variant="ghost" size="sm">
+                <Shuffle className="h-4 w-4" />
+              </Button>
+              <Button onClick={() => playSong(currentSong)} variant="default" size="sm">
+                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+              </Button>
+              <Button variant="ghost" size="sm">
+                <SkipForward className="h-4 w-4" />
+              </Button>
+              <Button variant="ghost" size="sm">
+                <Volume2 className="h-4 w-4" />
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -248,25 +195,23 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
           <CardContent className="p-4 text-center">
             <Music className="h-8 w-8 mx-auto mb-2 text-purple-600" />
             <div className="text-2xl font-bold">{songs.length}</div>
-            <div className="text-sm text-gray-600">総楽曲数</div>
+            <div className="text-sm text-muted-foreground">総楽曲数</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <Clock className="h-8 w-8 mx-auto mb-2 text-blue-600" />
             <div className="text-2xl font-bold">
-              {Math.floor(
-                songs.reduce((sum, song) => sum + song.duration, 0) / 60
-              )}
+              {Math.floor(songs.reduce((sum, song) => sum + song.duration, 0) / 60)}
             </div>
-            <div className="text-sm text-gray-600">総再生時間（分）</div>
+            <div className="text-sm text-muted-foreground">総再生時間（分）</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <User className="h-8 w-8 mx-auto mb-2 text-green-600" />
             <div className="text-2xl font-bold">3</div>
-            <div className="text-sm text-gray-600">アーティスト数</div>
+            <div className="text-sm text-muted-foreground">アーティスト数</div>
           </CardContent>
         </Card>
       </div>
@@ -277,9 +222,7 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
           <TabsTrigger value="all">すべて ({songs.length})</TabsTrigger>
           <TabsTrigger value="jpop">J-POP ({jpopSongs.length})</TabsTrigger>
           <TabsTrigger value="chill">Chill ({chillSongs.length})</TabsTrigger>
-          <TabsTrigger value="acoustic">
-            Acoustic ({acousticSongs.length})
-          </TabsTrigger>
+          <TabsTrigger value="acoustic">Acoustic ({acousticSongs.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="mt-6 space-y-4">
@@ -287,19 +230,16 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
             <SongCard key={song.id} song={song} />
           ))}
         </TabsContent>
-
         <TabsContent value="jpop" className="mt-6 space-y-4">
           {jpopSongs.map((song) => (
             <SongCard key={song.id} song={song} />
           ))}
         </TabsContent>
-
         <TabsContent value="chill" className="mt-6 space-y-4">
           {chillSongs.map((song) => (
             <SongCard key={song.id} song={song} />
           ))}
         </TabsContent>
-
         <TabsContent value="acoustic" className="mt-6 space-y-4">
           {acousticSongs.map((song) => (
             <SongCard key={song.id} song={song} />
@@ -310,16 +250,14 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
       {/* Info Card */}
       <Card className="border-l-4 border-l-green-500">
         <CardHeader>
-          <CardTitle className="text-lg">
-            ボキャブラリーソングについて
-          </CardTitle>
+          <CardTitle className="text-lg">ボキャブラリーソングについて</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3 text-sm text-gray-700">
-            <p>• あなたが登録した英単語が自然な歌詞に組み込まれています</p>
-            <p>• Suno AIを使用して、J-POPやチル系の聞きやすい楽曲を生成</p>
-            <p>• 繰り返し聞くことで、単語を自然に記憶できます</p>
-            <p>• GPS機能により、帰宅時に自動で再生されます</p>
+          <div className="space-y-3 text-sm text-foreground">
+            <p>• あなたが登録した英単語が自然な歌詞に組み込まれます。</p>
+            <p>• Suno AI を使用して、J-POP やチル系の聴きやすい曲を生成します。</p>
+            <p>• 繰り返し聴くことで、単語を自然に記憶できます。</p>
+            <p>• GPS 機能により、帰宅時に自動で再生されます。</p>
           </div>
         </CardContent>
       </Card>

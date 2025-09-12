@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -63,10 +63,10 @@ export const Dashboard = ({ user }: DashboardProps) => {
     <div className="space-y-6 p-4 max-w-4xl mx-auto">
       {/* Welcome Header */}
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl font-bold text-foreground mb-2">
           おかえりなさい、{user.name}さん！
         </h1>
-        <p className="text-gray-600">今日も楽しく英単語を学びましょう</p>
+        <p className="text-muted-foreground">今日も楽しく英単語を学びましょう</p>
       </div>
 
       {/* GPS Status */}
@@ -89,7 +89,7 @@ export const Dashboard = ({ user }: DashboardProps) => {
                 <Home className="h-4 w-4 mr-2" />
                 位置情報を取得中です
               </p>
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-muted-foreground">
                 現在地: {latitude.toFixed(4)}, {longitude.toFixed(4)}
               </div>
               {isNearHome(homeLocation) && (
@@ -99,7 +99,7 @@ export const Dashboard = ({ user }: DashboardProps) => {
               )}
             </div>
           ) : (
-            <p className="text-gray-600">位置情報を取得中...</p>
+            <p className="text-muted-foreground">位置情報を取得中...</p>
           )}
         </CardContent>
       </Card>
@@ -117,23 +117,19 @@ export const Dashboard = ({ user }: DashboardProps) => {
           <CardContent className="space-y-4">
             <div>
               <div className="flex justify-between text-sm mb-2">
-                <span>総合習熟度</span>
+                <span>総合習得度</span>
                 <span>{Math.round(averageMastery)}%</span>
               </div>
               <Progress value={averageMastery} className="h-2" />
             </div>
             <div className="grid grid-cols-2 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-blue-600">
-                  {words.length}
-                </div>
-                <div className="text-sm text-gray-600">登録単語</div>
+                <div className="text-2xl font-bold text-blue-600">{words.length}</div>
+                <div className="text-sm text-muted-foreground">総単語数</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-purple-600">
-                  {songs.length}
-                </div>
-                <div className="text-sm text-gray-600">楽曲数</div>
+                <div className="text-2xl font-bold text-purple-600">{songs.length}</div>
+                <div className="text-sm text-muted-foreground">楽曲数</div>
               </div>
             </div>
           </CardContent>
@@ -152,20 +148,16 @@ export const Dashboard = ({ user }: DashboardProps) => {
               <div className="space-y-3">
                 <div>
                   <h3 className="font-medium">{currentSong.title}</h3>
-                  <p className="text-sm text-gray-600">{currentSong.artist}</p>
+                  <p className="text-sm text-muted-foreground">{currentSong.artist}</p>
                 </div>
                 <Badge variant="secondary">{currentSong.genre}</Badge>
-                <Button
-                  onClick={() => playVocabularySong(currentSong)}
-                  className="w-full"
-                  variant="outline"
-                >
+                <Button onClick={() => playVocabularySong(currentSong)} className="w-full" variant="outline">
                   <Play className="h-4 w-4 mr-2" />
                   再生
                 </Button>
               </div>
             ) : (
-              <div className="text-center text-gray-600">
+              <div className="text-center text-muted-foreground">
                 <Music className="h-8 w-8 mx-auto mb-2 opacity-50" />
                 <p>楽曲を選択してください</p>
               </div>
@@ -181,22 +173,17 @@ export const Dashboard = ({ user }: DashboardProps) => {
             <BookOpen className="h-5 w-5" />
             <span>今日の復習単語</span>
           </CardTitle>
-          <CardDescription>
-            習熟度の低い単語や復習が必要な単語です
-          </CardDescription>
+          <CardDescription>習得度の低い単語や復習が必要な単語です</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {todayWords.map((word) => (
-              <div
-                key={word.id}
-                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-              >
+              <div key={word.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                 <div className="flex-1">
                   <div className="flex items-center space-x-3">
                     <div>
                       <h4 className="font-medium">{word.english}</h4>
-                      <p className="text-sm text-gray-600">{word.japanese}</p>
+                      <p className="text-sm text-muted-foreground">{word.japanese}</p>
                     </div>
                     <Badge variant="outline" className="text-xs">
                       {word.category}
@@ -204,7 +191,7 @@ export const Dashboard = ({ user }: DashboardProps) => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm text-gray-600">習熟度</div>
+                  <div className="text-sm text-muted-foreground">習得度</div>
                   <div className="font-medium">{word.masteryLevel}%</div>
                 </div>
               </div>
@@ -225,28 +212,21 @@ export const Dashboard = ({ user }: DashboardProps) => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {songs.map((song) => (
-              <div
-                key={song.id}
-                className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
-              >
+              <div key={song.id} className="border rounded-lg p-4 hover:bg-muted transition-colors">
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h4 className="font-medium">{song.title}</h4>
-                    <p className="text-sm text-gray-600">{song.artist}</p>
+                    <p className="text-sm text-muted-foreground">{song.artist}</p>
                   </div>
                   <Badge variant="outline">{song.genre}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center text-sm text-gray-600">
+                  <div className="flex items-center text-sm text-muted-foreground">
                     <Clock className="h-4 w-4 mr-1" />
                     {Math.floor(song.duration / 60)}:
                     {(song.duration % 60).toString().padStart(2, "0")}
                   </div>
-                  <Button
-                    onClick={() => playVocabularySong(song)}
-                    size="sm"
-                    variant="outline"
-                  >
+                  <Button onClick={() => playVocabularySong(song)} size="sm" variant="outline">
                     <Play className="h-4 w-4 mr-1" />
                     再生
                   </Button>

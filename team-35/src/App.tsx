@@ -19,10 +19,10 @@ export default function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">ミミコーチを起動中...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">ミミコーチを起動中...</p>
         </div>
       </div>
     );
@@ -62,7 +62,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <Navigation
         currentScreen={currentScreen}
         onNavigate={setCurrentScreen}
@@ -71,7 +71,7 @@ export default function App() {
 
       {/* Main Content */}
       <div className="lg:pl-64">
-        <main className="pb-20 lg:pb-0">{renderCurrentScreen()}</main>
+        <main className="container-app pb-20 lg:pb-0">{renderCurrentScreen()}</main>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
@@ -44,42 +44,40 @@ export const LoginScreen = ({ onLogin, onRegister }: LoginScreenProps) => {
         {/* App Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
-            <div className="bg-purple-600 rounded-full p-3">
-              <Music className="h-8 w-8 text-white" />
+            <div className="bg-primary rounded-full p-3">
+              <Music className="h-8 w-8 text-primary-foreground" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">ミミコーチ</h1>
-          <p className="text-gray-600">音楽で覚える英単語学習アプリ</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">ミミコーチ</h1>
+          <p className="text-muted-foreground">音楽で覚える英単語学習アプリ</p>
         </div>
 
         {/* Features Preview */}
         <div className="grid grid-cols-3 gap-4 mb-8">
           <div className="text-center">
-            <div className="bg-white rounded-lg p-3 shadow-sm mb-2">
-              <Music className="h-6 w-6 text-purple-600 mx-auto" />
+            <div className="bg-card rounded-lg p-3 shadow-sm mb-2">
+              <Music className="h-6 w-6 text-primary mx-auto" />
             </div>
-            <p className="text-sm text-gray-600">音楽学習</p>
+            <p className="text-sm text-muted-foreground">音楽学習</p>
           </div>
           <div className="text-center">
-            <div className="bg-white rounded-lg p-3 shadow-sm mb-2">
+            <div className="bg-card rounded-lg p-3 shadow-sm mb-2">
               <MapPin className="h-6 w-6 text-blue-600 mx-auto" />
             </div>
-            <p className="text-sm text-gray-600">GPS連動</p>
+            <p className="text-sm text-muted-foreground">GPS連携</p>
           </div>
           <div className="text-center">
-            <div className="bg-white rounded-lg p-3 shadow-sm mb-2">
+            <div className="bg-card rounded-lg p-3 shadow-sm mb-2">
               <Headphones className="h-6 w-6 text-green-600 mx-auto" />
             </div>
-            <p className="text-sm text-gray-600">自動再生</p>
+            <p className="text-sm text-muted-foreground">自動再生</p>
           </div>
         </div>
 
         <Card>
           <CardHeader>
             <CardTitle>ミミコーチへようこそ</CardTitle>
-            <CardDescription>
-              アカウントを作成するか、既存のアカウントでログインしてください
-            </CardDescription>
+            <CardDescription>アカウントを作成するか、既存のアカウントでログインしてください</CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="login" className="w-full">
@@ -109,19 +107,11 @@ export const LoginScreen = ({ onLogin, onRegister }: LoginScreenProps) => {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                {error && (
-                  <p className="text-destructive text-sm">{error}</p>
-                )}
-                <Button 
-                  onClick={handleLogin} 
-                  disabled={loading} 
-                  className="w-full"
-                >
+                {error && <p className="text-destructive text-sm">{error}</p>}
+                <Button onClick={handleLogin} disabled={loading} className="w-full">
                   {loading ? '処理中...' : 'ログイン'}
                 </Button>
-                <p className="text-sm text-center text-gray-600">
-                  デモ用: 任意のメールアドレスとパスワードでログインできます
-                </p>
+                <p className="text-sm text-center text-muted-foreground">デモ用: 任意のメールアドレスとパスワードでログインできます</p>
               </TabsContent>
 
               <TabsContent value="register" className="space-y-4">
@@ -155,14 +145,8 @@ export const LoginScreen = ({ onLogin, onRegister }: LoginScreenProps) => {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                {error && (
-                  <p className="text-destructive text-sm">{error}</p>
-                )}
-                <Button 
-                  onClick={handleRegister} 
-                  disabled={loading} 
-                  className="w-full"
-                >
+                {error && <p className="text-destructive text-sm">{error}</p>}
+                <Button onClick={handleRegister} disabled={loading} className="w-full">
                   {loading ? '処理中...' : 'アカウント作成'}
                 </Button>
               </TabsContent>
