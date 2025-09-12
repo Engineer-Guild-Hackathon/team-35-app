@@ -35,16 +35,27 @@ export const getAuthErrorMessage = (error: AuthError): string => {
 
 // FirebaseUserを内部のUser型に変換
 const mapFirebaseUserToUser = async (firebaseUser: FirebaseUser): Promise<User> => {
-  // Firestoreからユーザー情報を取得
-  const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
-  const userData = userDoc.data();
+  try {
+    // Firestoreからユーザー情報を取得
+    const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
+    const userData = userDoc.data();
 
-  return {
-    id: firebaseUser.uid,
-    email: firebaseUser.email || '',
-    name: userData?.name || firebaseUser.displayName || firebaseUser.email?.split('@')[0] || '',
-    homeLocation: userData?.homeLocation,
-  };
+    return {
+      id: firebaseUser.uid,
+      email: firebaseUser.email || '',
+      name: userData?.name || firebaseUser.displayName || firebaseUser.email?.split('@')[0] || '',
+      homeLocation: userData?.homeLocation,
+    };
+  } catch (error) {
+    console.error('mapFirebaseUserToUser: Error fetching user data from Firestore:', error);
+    // Firestoreからデータが取得できない場合はFirebase認証の基本情報を使用
+    return {
+      id: firebaseUser.uid,
+      email: firebaseUser.email || '',
+      name: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || '',
+      homeLocation: undefined,
+    };
+  }
 };
 
 // ユーザー新規登録
@@ -107,17 +118,26 @@ export const logoutUser = async () => {
 
 // 認証状態の監視
 export const subscribeToAuthState = (callback: (user: User | null) => void) => {
+  console.log('authService: Setting up auth state subscription');
+  
   return onAuthStateChanged(auth, async (firebaseUser) => {
+    console.log('authService: Auth state changed, firebaseUser:', firebaseUser ? 'exists' : 'null');
+    
     if (firebaseUser) {
       try {
         const user = await mapFirebaseUserToUser(firebaseUser);
+        console.log('authService: Successfully mapped user:', user.email);
         callback(user);
       } catch (error) {
-        console.error('Error mapping Firebase user:', error);
+        console.error('authService: Error mapping Firebase user:', error);
         callback(null);
       }
     } else {
+      console.log('authService: No user logged in');
       callback(null);
     }
+  }, (error) => {
+    console.error('authService: Auth state change error:', error);
+    callback(null);
   });
 };

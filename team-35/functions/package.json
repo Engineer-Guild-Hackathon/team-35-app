@@ -1,5 +1,7 @@
 {
   "name": "functions",
+  "version": "1.0.0",
+  "description": "Firebase Functions for team-35 app",
   "scripts": {
     "lint": "eslint --ext .js,.ts .",
     "build": "tsc",

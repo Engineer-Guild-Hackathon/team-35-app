@@ -1,0 +1,10 @@
+{
+  "extends": "./team-35/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./team-35"
+  },
+  "include": [
+    "team-35/**/*.ts",
+    "team-35/**/*.tsx"
+  ]
+}

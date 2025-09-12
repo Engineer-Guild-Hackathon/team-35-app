@@ -14,19 +14,8 @@ import { SettingsScreen } from "./components/SettingsScreen";
 import { Navigation } from "./components/Navigation";
 
 export default function App() {
-  const { user, loading, login, register, logout } = useAuth();
+  const { user, login, register, logout } = useAuth();
   const [currentScreen, setCurrentScreen] = useState<Screen>("dashboard");
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">ミミコーチを起動中...</p>
-        </div>
-      </div>
-    );
-  }
 
   if (!user) {
     return <LoginScreen onLogin={login} onRegister={register} />;
@@ -71,7 +60,9 @@ export default function App() {
 
       {/* Main Content */}
       <div className="lg:pl-64">
-        <main className="container-app pb-20 lg:pb-0">{renderCurrentScreen()}</main>
+        <main className="container-app pb-20 lg:pb-0">
+          {renderCurrentScreen()}
+        </main>
       </div>
     </div>
   );

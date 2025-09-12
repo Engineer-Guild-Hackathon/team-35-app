@@ -19,12 +19,21 @@ export const LoginScreen = ({ onLogin, onRegister }: LoginScreenProps) => {
   const [error, setError] = useState('');
 
   const handleLogin = async () => {
+    console.log('LoginScreen: handleLogin called with', { email, password: password ? '[HIDDEN]' : 'empty' });
     setLoading(true);
     setError('');
-    const result = await onLogin(email, password);
-    if (!result.success) {
-      setError(result.error || 'ログインに失敗しました');
+    
+    try {
+      const result = await onLogin(email, password);
+      console.log('LoginScreen: onLogin result', result);
+      if (!result.success) {
+        setError(result.error || 'ログインに失敗しました');
+      }
+    } catch (error) {
+      console.error('LoginScreen: handleLogin error', error);
+      setError('ログイン処理でエラーが発生しました');
     }
+    
     setLoading(false);
   };
 
