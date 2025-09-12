@@ -13,7 +13,7 @@ import { Progress } from "./ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Word } from "../types";
 import { mockWords } from "../data/mockData";
-import { getJSON } from "../lib/storage";
+import { useWordsStore } from "../store/useWordsStore";
 import {
   Search,
   Plus,
@@ -30,26 +30,14 @@ interface WordsScreenProps {
 }
 
 export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
-  const [words, setWords] = useState<Word[]>(mockWords);
+  const { words, updateMasteryLevel, deleteWord, initializeWithMockData } = useWordsStore();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   
-  // Merge locally saved custom words (from AddWordScreen) on mount
+  // Initialize with mock data if empty
   useEffect(() => {
-    try {
-      const custom = getJSON<Word[]>('customWords', []);
-      if (custom && custom.length) {
-        setWords(prev => [
-          ...custom.map(w => ({
-            ...w,
-            createdAt: new Date(w.createdAt),
-            lastReviewed: w.lastReviewed ? new Date(w.lastReviewed) : undefined,
-          })),
-          ...prev,
-        ]);
-      }
-    } catch {}
-  }, []);
+    initializeWithMockData(mockWords);
+  }, [initializeWithMockData]);
 
   const categories = [
     "all",
@@ -102,6 +90,16 @@ export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
     }
   };
 
+  const handleMasteryUpdate = (wordId: string, newLevel: number) => {
+    updateMasteryLevel(wordId, Math.max(0, Math.min(100, newLevel)));
+  };
+
+  const handleDeleteWord = (wordId: string) => {
+    if (confirm('この単語を削除しますか？')) {
+      deleteWord(wordId);
+    }
+  };
+
   const WordCard = ({ word }: { word: Word }) => (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4">
@@ -151,7 +149,20 @@ export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
                 {word.lastReviewed.toLocaleDateString()}
               </div>
             )}
-            <Button variant="ghost" size="sm">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => handleMasteryUpdate(word.id, word.masteryLevel + 10)}
+              title="習得度+10"
+            >
+              <TrendingUp className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => handleDeleteWord(word.id)}
+              title="削除"
+            >
               <Edit className="h-4 w-4" />
             </Button>
           </div>

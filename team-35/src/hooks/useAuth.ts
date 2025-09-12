@@ -1,50 +1,55 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { User } from '../types';
+import { 
+  loginUser, 
+  registerUser, 
+  logoutUser, 
+  subscribeToAuthState 
+} from '../lib/authService';
 
-// Mock Firebase auth for demo purposes
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate Firebase auth check
-    try { const savedUser = localStorage.getItem('mimicoach_user'); if (savedUser) { try { setUser(JSON.parse(savedUser)); } catch { localStorage.removeItem('mimicoach_user'); setUser(null); } } } finally { }
-    setLoading(false);
+    // Firebase認証状態の監視を開始
+    const unsubscribe = subscribeToAuthState((user) => {
+      setUser(user);
+      setLoading(false);
+    });
+
+    // クリーンアップ関数でsubscriptionを解除
+    return unsubscribe;
   }, []);
 
   const login = async (email: string, password: string) => {
-    // Mock login - in real app, use Firebase Auth
-    if (email && password) {
-      const mockUser: User = {
-        id: '1',
-        email,
-        name: email.split('@')[0],
-      };
-      setUser(mockUser);
-      localStorage.setItem('mimicoach_user', JSON.stringify(mockUser));
-      return { success: true };
+    if (!email || !password) {
+      return { success: false, error: 'メールアドレスとパスワードを入力してください。' };
     }
-    return { success: false, error: 'Invalid credentials' };
+    
+    const result = await loginUser(email, password);
+    return result;
   };
 
   const register = async (email: string, password: string, name: string) => {
-    // Mock registration
-    if (email && password && name) {
-      const mockUser: User = {
-        id: Date.now().toString(),
-        email,
-        name,
-      };
-      setUser(mockUser);
-      localStorage.setItem('mimicoach_user', JSON.stringify(mockUser));
-      return { success: true };
+    if (!email || !password || !name) {
+      return { success: false, error: '全ての項目を入力してください。' };
     }
-    return { success: false, error: 'Invalid data' };
+    
+    if (password.length < 6) {
+      return { success: false, error: 'パスワードは6文字以上で入力してください。' };
+    }
+    
+    const result = await registerUser(email, password, name);
+    return result;
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('mimicoach_user');
+  const logout = async () => {
+    const result = await logoutUser();
+    if (!result.success && result.error) {
+      console.error('Logout error:', result.error);
+      // ログアウトエラーの場合でも、UIでは成功として扱う
+    }
   };
 
   return {

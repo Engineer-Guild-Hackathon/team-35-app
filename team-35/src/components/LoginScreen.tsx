@@ -108,10 +108,13 @@ export const LoginScreen = ({ onLogin, onRegister }: LoginScreenProps) => {
                   />
                 </div>
                 {error && <p className="text-destructive text-sm">{error}</p>}
-                <Button onClick={handleLogin} disabled={loading} className="w-full">
+                <Button 
+                  onClick={handleLogin} 
+                  disabled={loading || !email || !password} 
+                  className="w-full"
+                >
                   {loading ? '処理中...' : 'ログイン'}
                 </Button>
-                <p className="text-sm text-center text-muted-foreground">デモ用: 任意のメールアドレスとパスワードでログインできます</p>
               </TabsContent>
 
               <TabsContent value="register" className="space-y-4">
@@ -146,9 +149,16 @@ export const LoginScreen = ({ onLogin, onRegister }: LoginScreenProps) => {
                   />
                 </div>
                 {error && <p className="text-destructive text-sm">{error}</p>}
-                <Button onClick={handleRegister} disabled={loading} className="w-full">
+                <Button 
+                  onClick={handleRegister} 
+                  disabled={loading || !email || !password || !name} 
+                  className="w-full"
+                >
                   {loading ? '処理中...' : 'アカウント作成'}
                 </Button>
+                <p className="text-xs text-center text-muted-foreground">
+                  パスワードは6文字以上で入力してください
+                </p>
               </TabsContent>
             </Tabs>
           </CardContent>

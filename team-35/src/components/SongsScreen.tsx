@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+﻿import { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -12,6 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Progress } from "./ui/progress";
 import { VocabularySong } from "../types";
 import { mockSongs, mockWords } from "../data/mockData";
+import { useWordsStore } from "../store/useWordsStore";
+import { useSongsStore } from "../store/useSongsStore";
 import {
   Play,
   Pause,
@@ -32,11 +34,16 @@ interface SongsScreenProps {
 }
 
 export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
-  const [songs] = useState<VocabularySong[]>(mockSongs);
-  const [currentSong, setCurrentSong] = useState<VocabularySong | null>(null);
+  const { words } = useWordsStore();
+  const { songs, currentSong, setCurrentSong, initializeWithMockData } = useSongsStore();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [showLyrics, setShowLyrics] = useState<string | null>(null);
+
+  // Initialize with mock data if empty
+  useEffect(() => {
+    initializeWithMockData(mockSongs);
+  }, [initializeWithMockData]);
 
   const playSong = (song: VocabularySong) => {
     if (currentSong?.id === song.id) {
@@ -50,7 +57,7 @@ export const SongsScreen = ({ onNavigate }: SongsScreenProps) => {
   };
 
   const getWordsInSong = (song: VocabularySong) => {
-    return mockWords.filter((word) => song.words.includes(word.id));
+    return words.filter((word) => song.words.includes(word.id));
   };
 
   const formatTime = (seconds: number) => {

@@ -19,7 +19,7 @@ import {
 import { Textarea } from "./ui/textarea";
 import { ArrowLeft, Save, Volume2, Lightbulb, BookOpen } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
-import { setJSON, getJSON } from "../lib/storage";
+import { useWordsStore } from "../store/useWordsStore";
 import { Word } from "../types";
 
 interface AddWordScreenProps {
@@ -28,6 +28,7 @@ interface AddWordScreenProps {
 
 export const AddWordScreen = ({ onNavigate }: AddWordScreenProps) => {
   const { user } = useAuth();
+  const { addWord } = useWordsStore();
   const [formData, setFormData] = useState({
     english: "",
     japanese: "",
@@ -78,23 +79,17 @@ export const AddWordScreen = ({ onNavigate }: AddWordScreenProps) => {
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 400));
 
-    const now = new Date();
-    const newWord: Word = {
-      id: String(Date.now()),
+    const newWord = {
       userId: user?.id ?? "guest",
       english: formData.english.trim(),
       japanese: formData.japanese.trim(),
       pronunciation: formData.pronunciation.trim() || undefined,
       difficulty: formData.difficulty,
       category: formData.category,
-      createdAt: now,
       masteryLevel: 0,
     };
 
-    const existing = getJSON<Word[]>("customWords", []);
-    existing.unshift(newWord);
-    setJSON("customWords", existing);
-
+    addWord(newWord);
     setIsLoading(false);
     onNavigate("words");
   };

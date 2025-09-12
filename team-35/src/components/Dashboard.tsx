@@ -11,6 +11,8 @@ import { Progress } from "./ui/progress";
 import { Badge } from "./ui/badge";
 import { User, Word, VocabularySong } from "../types";
 import { mockWords, mockSongs } from "../data/mockData";
+import { useWordsStore } from "../store/useWordsStore";
+import { useSongsStore } from "../store/useSongsStore";
 import { useGeolocation } from "../hooks/useGeolocation";
 import {
   Music,
@@ -29,23 +31,28 @@ interface DashboardProps {
 }
 
 export const Dashboard = ({ user }: DashboardProps) => {
-  const [words] = useState<Word[]>(mockWords);
-  const [songs] = useState<VocabularySong[]>(mockSongs);
-  const [currentSong, setCurrentSong] = useState<VocabularySong | null>(null);
+  const { words, initializeWithMockData: initWords } = useWordsStore();
+  const { songs, currentSong, setCurrentSong, initializeWithMockData: initSongs } = useSongsStore();
   const { latitude, longitude, error, isNearHome } = useGeolocation();
+
+  // Initialize stores with mock data if empty
+  useEffect(() => {
+    initWords(mockWords);
+    initSongs(mockSongs);
+  }, [initWords, initSongs]);
 
   // Mock home location for demo
   const homeLocation = { latitude: 35.6762, longitude: 139.6503 }; // Tokyo
 
   useEffect(() => {
     // Simulate geofencing trigger
-    if (user.homeLocation && isNearHome(user.homeLocation)) {
+    if (user.homeLocation && isNearHome(user.homeLocation) && songs.length > 0) {
       // Auto-play today's vocabulary song
       const todaySong = songs[0];
       setCurrentSong(todaySong);
       // In real app, this would trigger audio playback
     }
-  }, [latitude, longitude, user.homeLocation, isNearHome, songs]);
+  }, [latitude, longitude, user.homeLocation, isNearHome, songs, setCurrentSong]);
 
   const todayWords = words
     .filter((word) => word.masteryLevel < 70 || !word.lastReviewed)
