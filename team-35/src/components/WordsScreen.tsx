@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import { Word } from "../types";
 import { mockWords } from "../data/mockData";
 import { useWordsStore } from "../store/useWordsStore";
+import { useAuth } from "../hooks/useAuth";
 import {
   Search,
   Plus,
@@ -30,14 +31,32 @@ interface WordsScreenProps {
 }
 
 export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
-  const { words, updateMasteryLevel, deleteWord, initializeWithMockData } = useWordsStore();
+  const { user } = useAuth();
+  const { 
+    words, 
+    loading, 
+    error,
+    updateMasteryLevel, 
+    deleteWord, 
+    loadUserWords,
+    subscribeToWords,
+    initializeWithMockData,
+    setError 
+  } = useWordsStore();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   
-  // Initialize with mock data if empty
+  // ユーザーの単語をFirestoreから読み込み
   useEffect(() => {
-    initializeWithMockData(mockWords);
-  }, [initializeWithMockData]);
+    if (user?.id) {
+      // リアルタイム監視を開始
+      const unsubscribe = subscribeToWords(user.id);
+      return unsubscribe;
+    } else {
+      // ユーザーがログインしていない場合はモックデータで初期化
+      initializeWithMockData(mockWords);
+    }
+  }, [user?.id, subscribeToWords, initializeWithMockData]);
 
   const categories = [
     "all",
@@ -90,13 +109,20 @@ export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
     }
   };
 
-  const handleMasteryUpdate = (wordId: string, newLevel: number) => {
-    updateMasteryLevel(wordId, Math.max(0, Math.min(100, newLevel)));
+  const handleMasteryUpdate = async (wordId: string, newLevel: number) => {
+    const success = await updateMasteryLevel(wordId, Math.max(0, Math.min(100, newLevel)));
+    if (!success) {
+      // エラーはstoreで管理されるので、必要に応じて追加の処理をここで行う
+      console.error('習得度の更新に失敗しました');
+    }
   };
 
-  const handleDeleteWord = (wordId: string) => {
+  const handleDeleteWord = async (wordId: string) => {
     if (confirm('この単語を削除しますか？')) {
-      deleteWord(wordId);
+      const success = await deleteWord(wordId);
+      if (!success) {
+        console.error('単語の削除に失敗しました');
+      }
     }
   };
 
@@ -171,6 +197,18 @@ export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
     </Card>
   );
 
+  // ローディング中の表示
+  if (loading && words.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">単語を読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 p-4 max-w-6xl mx-auto">
       {/* Header */}
@@ -187,6 +225,29 @@ export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
           <span>単語を追加</span>
         </Button>
       </div>
+
+      {/* Error Display */}
+      {error && (
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <div className="text-red-600">⚠️</div>
+              <div>
+                <p className="text-red-800 font-medium">エラーが発生しました</p>
+                <p className="text-red-600 text-sm">{error}</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setError(null)}
+                  className="mt-2"
+                >
+                  閉じる
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

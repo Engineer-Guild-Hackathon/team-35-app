@@ -28,7 +28,7 @@ interface AddWordScreenProps {
 
 export const AddWordScreen = ({ onNavigate }: AddWordScreenProps) => {
   const { user } = useAuth();
-  const { addWord } = useWordsStore();
+  const { addWord, loading: storeLoading, error: storeError, setError } = useWordsStore();
   const [formData, setFormData] = useState({
     english: "",
     japanese: "",
@@ -40,6 +40,8 @@ export const AddWordScreen = ({ onNavigate }: AddWordScreenProps) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  
+  const loading = isLoading || storeLoading;
 
   const categories = [
     "ビジネス",
@@ -75,12 +77,15 @@ export const AddWordScreen = ({ onNavigate }: AddWordScreenProps) => {
 
   const handleSave = async () => {
     if (!validateForm()) return;
+    if (!user?.id) {
+      setErrors({ submit: '認証が必要です。ログインしてください。' });
+      return;
+    }
 
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 400));
+    setError(null);
 
-    const newWord = {
-      userId: user?.id ?? "guest",
+    const newWordData = {
       english: formData.english.trim(),
       japanese: formData.japanese.trim(),
       pronunciation: formData.pronunciation.trim() || undefined,
@@ -89,9 +94,15 @@ export const AddWordScreen = ({ onNavigate }: AddWordScreenProps) => {
       masteryLevel: 0,
     };
 
-    addWord(newWord);
+    const success = await addWord(user.id, newWordData);
     setIsLoading(false);
-    onNavigate("words");
+    
+    if (success) {
+      onNavigate("words");
+    } else {
+      // エラーはstoreで管理されるので、UIで表示
+      setErrors({ submit: storeError || '単語の保存に失敗しました。' });
+    }
   };
 
   const playPronunciation = () => {
@@ -295,6 +306,15 @@ export const AddWordScreen = ({ onNavigate }: AddWordScreenProps) => {
             </Card>
           )}
 
+          {/* Error Display */}
+          {(errors.submit || storeError) && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-sm text-red-600">
+                {errors.submit || storeError}
+              </p>
+            </div>
+          )}
+
           {/* Action Buttons */}
           <div className="flex justify-end space-x-3 pt-4">
             <Button variant="outline" onClick={() => onNavigate("words")}>
@@ -302,11 +322,11 @@ export const AddWordScreen = ({ onNavigate }: AddWordScreenProps) => {
             </Button>
             <Button
               onClick={handleSave}
-              disabled={isLoading}
+              disabled={loading}
               className="flex items-center space-x-2"
             >
               <Save className="h-4 w-4" />
-              <span>{isLoading ? "保存中..." : "単語を保存"}</span>
+              <span>{loading ? "保存中..." : "単語を保存"}</span>
             </Button>
           </div>
         </CardContent>
