@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "cd team-35 && npx expo export",
-    "start": "cd team-35 && npm start"
+    "start": "cd team-35 && npm start",
+    "lint": "cd team-35 && npx expo lint"
   },
   "repository": {
     "type": "git",
