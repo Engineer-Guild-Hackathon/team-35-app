@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "このリポジトリはハッカソン提出用の雛形です。以下の項目をすべて埋めてください。",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "build": "cd team-35 && expo export",
+    "start": "cd team-35 && npm start"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Engineer-Guild-Hackathon/team-35-app.git"
