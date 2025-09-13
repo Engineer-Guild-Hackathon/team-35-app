@@ -1,2 +1,2 @@
-﻿export { AddWordScreen as default } from './AddWordScreen';
+export { AddWordScreen as default } from './AddWordScreen';
 

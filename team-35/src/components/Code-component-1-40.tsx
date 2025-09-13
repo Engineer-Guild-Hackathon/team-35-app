@@ -1,2 +1,2 @@
-﻿export { SongsScreen as default } from './SongsScreen';
+export { SongsScreen as default } from './SongsScreen';
 
