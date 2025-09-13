@@ -2,80 +2,100 @@
 
 :root {
   --font-size: 16px;
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
-  --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
+
+  /* Surfaces & text */
+  --background: var(--color-white);
+  --foreground: var(--color-gray-900);
+  --card: var(--color-white);
+  --card-foreground: var(--color-gray-900);
+  --popover: var(--color-white);
+  --popover-foreground: var(--color-gray-900);
+
+  /* Figma/Brand tokens */
+  --primary: var(--color-purple-600);
+  --primary-foreground: var(--color-white);
+  --secondary: var(--color-gray-100);
+  --secondary-foreground: var(--color-gray-900);
+  --accent: var(--color-purple-50);
+  --accent-foreground: var(--color-purple-700);
+  --muted: var(--color-gray-100);
+  --muted-foreground: var(--color-gray-600);
+  --success: var(--color-green-600);
+  --warning: var(--color-yellow-600);
+  --info: var(--color-blue-600);
+  --destructive: var(--color-red-600);
+  --destructive-foreground: var(--color-white);
+
+  /* Borders & inputs */
+  --border: var(--color-gray-200);
   --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
+  --input-background: var(--color-gray-100);
+  --switch-background: var(--color-gray-300);
+  --ring: var(--color-purple-400);
+
+  /* Charts (kept) */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Radii (Figma) */
+  --radius: 0.75rem; /* 12px base */
+
+  /* Sidebar theme */
+  --sidebar: var(--color-gray-50);
+  --sidebar-foreground: var(--color-gray-900);
+  --sidebar-primary: var(--color-purple-600);
+  --sidebar-primary-foreground: var(--color-white);
+  --sidebar-accent: var(--color-gray-100);
+  --sidebar-accent-foreground: var(--color-gray-900);
+  --sidebar-border: var(--color-gray-200);
+  --sidebar-ring: var(--color-purple-400);
+
+  /* Typography weight */
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+
+  /* Shadows (Figma elevation) */
+  --shadow-1: 0 1px 2px rgba(16,24,40,.06), 0 0 0 1px rgba(16,24,40,.03);
+  --shadow-2: 0 4px 10px rgba(16,24,40,.08);
+  --shadow-3: 0 10px 24px rgba(16,24,40,.12);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
+  --background: var(--color-gray-900);
+  --foreground: var(--color-gray-50);
+  --card: var(--color-gray-900);
+  --card-foreground: var(--color-gray-50);
+  --popover: var(--color-gray-900);
+  --popover-foreground: var(--color-gray-50);
+  --primary: var(--color-purple-400);
+  --primary-foreground: var(--color-gray-900);
+  --secondary: var(--color-gray-800);
+  --secondary-foreground: var(--color-gray-50);
+  --muted: var(--color-gray-800);
+  --muted-foreground: var(--color-gray-400);
+  --accent: var(--color-purple-700);
+  --accent-foreground: var(--color-gray-50);
+  --destructive: var(--color-red-600);
+  --destructive-foreground: var(--color-white);
+  --border: var(--color-gray-800);
+  --input: var(--color-gray-800);
+  --ring: var(--color-purple-600);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --sidebar: var(--color-gray-900);
+  --sidebar-foreground: var(--color-gray-50);
+  --sidebar-primary: var(--color-purple-400);
+  --sidebar-primary-foreground: var(--color-gray-900);
+  --sidebar-accent: var(--color-gray-800);
+  --sidebar-accent-foreground: var(--color-gray-50);
+  --sidebar-border: var(--color-gray-800);
+  --sidebar-ring: var(--color-purple-600);
 }
 
 @theme inline {
@@ -126,64 +146,92 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans);
   }
+
+  /* Ensure the app can scroll on all platforms */
+  html, body {
+    min-height: 100%;
+    height: auto !important;
+    overflow-x: hidden;
+    overflow-y: auto !important; /* Expo web sometimes sets hidden */
+  }
+  #root, #__next, [data-expo-root] {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+  }
+  main { min-height: 0; }
 }
 
-/**
- * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
- */
+/*
+  Base typography
+  - Keep it simple and predictable.
+  - Tailwind text-* utilities will override these when used.
+*/
 @layer base {
-  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
-    h1 {
-      font-size: var(--text-2xl);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
+  h1 {
+    font-size: var(--text-3xl);
+    line-height: var(--text-3xl--line-height);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  h2 {
+    font-size: var(--text-2xl);
+    line-height: var(--text-2xl--line-height);
+    font-weight: 700;
+    letter-spacing: -0.005em;
+  }
+  h3 {
+    font-size: var(--text-xl);
+    line-height: var(--text-xl--line-height);
+    font-weight: 600;
+  }
+  h4 {
+    font-size: var(--text-lg);
+    line-height: var(--text-lg--line-height);
+    font-weight: 600;
+  }
+  p, label, input, button {
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+  }
 
-    h2 {
-      font-size: var(--text-xl);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    h3 {
-      font-size: var(--text-lg);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    h4 {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    p {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-normal);
-      line-height: 1.5;
-    }
-
-    label {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    button {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    input {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-normal);
-      line-height: 1.5;
-    }
+  html, body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   }
 }
 
 html {
   font-size: var(--font-size);
+}
+
+/*
+  Layout helpers that play nicely with Tailwind
+*/
+@layer components {
+  .container-app {
+    width: min(100% - 2rem, 72rem);
+    margin-inline: auto;
+  }
+  .card-surface {
+    background: var(--card);
+    color: var(--card-foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-1);
+  }
+}
+
+@layer utilities {
+  .shadow-soft { box-shadow: var(--shadow-1); }
+  .shadow-elevated { box-shadow: var(--shadow-3); }
+  .radius-sm { border-radius: var(--radius-sm); }
+  .radius-md { border-radius: var(--radius-md); }
+  .radius-lg { border-radius: var(--radius-lg); }
+  .radius-xl { border-radius: var(--radius-xl); }
 }

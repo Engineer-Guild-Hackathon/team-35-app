@@ -1,0 +1,27 @@
+{
+  "name": "team-35-app",
+  "version": "1.0.0",
+  "description": "このリポジトリはハッカソン提出用の雛形です。以下の項目をすべて埋めてください。",
+  "main": "index.js",
+  "scripts": {
+    "build": "cd team-35 && npx expo export",
+    "start": "cd team-35 && npm start",
+    "lint": "cd team-35 && npx expo lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Engineer-Guild-Hackathon/team-35-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Engineer-Guild-Hackathon/team-35-app/issues"
+  },
+  "homepage": "https://github.com/Engineer-Guild-Hackathon/team-35-app#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.3.1"
+  }
+}

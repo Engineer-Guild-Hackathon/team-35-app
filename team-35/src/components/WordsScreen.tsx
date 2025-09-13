@@ -1,66 +1,128 @@
-import { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Badge } from './ui/badge';
-import { Progress } from './ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Word } from '../types';
-import { mockWords } from '../data/mockData';
-import { 
-  Search, 
-  Plus, 
-  BookOpen, 
-  TrendingUp, 
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Badge } from "./ui/badge";
+import { Progress } from "./ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Word } from "../types";
+import { mockWords } from "../data/mockData";
+import { useWordsStore } from "../store/useWordsStore";
+import { useAuth } from "../hooks/useAuth";
+import {
+  Search,
+  Plus,
+  BookOpen,
+  TrendingUp,
   Clock,
   Edit,
   Volume2,
-  Star
-} from 'lucide-react';
+  Star,
+} from "lucide-react";
 
 interface WordsScreenProps {
   onNavigate: (screen: string) => void;
 }
 
 export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
-  const [words] = useState<Word[]>(mockWords);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const { user } = useAuth();
+  const { 
+    words, 
+    loading, 
+    error,
+    updateMasteryLevel, 
+    deleteWord, 
+    loadUserWords,
+    subscribeToWords,
+    initializeWithMockData,
+    setError 
+  } = useWordsStore();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  
+  // ユーザーの単語をFirestoreから読み込み
+  useEffect(() => {
+    if (user?.id) {
+      // リアルタイム監視を開始
+      const unsubscribe = subscribeToWords(user.id);
+      return unsubscribe;
+    } else {
+      // ユーザーがログインしていない場合はモックデータで初期化
+      initializeWithMockData(mockWords);
+    }
+  }, [user?.id, subscribeToWords, initializeWithMockData]);
 
-  const categories = ['all', ...Array.from(new Set(words.map(word => word.category)))];
+  const categories = [
+    "all",
+    ...Array.from(new Set(words.map((word) => word.category))),
+  ];
 
-  const filteredWords = words.filter(word => {
-    const matchesSearch = word.english.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         word.japanese.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || word.category === selectedCategory;
+  const filteredWords = words.filter((word) => {
+    const matchesSearch =
+      word.english.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      word.japanese.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "all" || word.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const beginnerWords = filteredWords.filter(word => word.difficulty === 'beginner');
-  const intermediateWords = filteredWords.filter(word => word.difficulty === 'intermediate');
-  const advancedWords = filteredWords.filter(word => word.difficulty === 'advanced');
+  const beginnerWords = filteredWords.filter(
+    (word) => word.difficulty === "beginner"
+  );
+  const intermediateWords = filteredWords.filter(
+    (word) => word.difficulty === "intermediate"
+  );
+  const advancedWords = filteredWords.filter(
+    (word) => word.difficulty === "advanced"
+  );
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'beginner': return 'bg-green-100 text-green-800';
-      case 'intermediate': return 'bg-yellow-100 text-yellow-800';
-      case 'advanced': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "beginner":
+        return "bg-green-100 text-green-800";
+      case "intermediate":
+        return "bg-yellow-100 text-yellow-800";
+      case "advanced":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
   const getMasteryColor = (level: number) => {
-    if (level >= 80) return 'text-green-600';
-    if (level >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+    if (level >= 80) return "text-green-600";
+    if (level >= 60) return "text-yellow-600";
+    return "text-red-600";
   };
 
   const playPronunciation = (word: Word) => {
-    // In real app, this would use Web Speech API or audio files
-    if ('speechSynthesis' in window) {
+    if ("speechSynthesis" in window) {
       const utterance = new SpeechSynthesisUtterance(word.english);
-      utterance.lang = 'en-US';
+      utterance.lang = "en-US";
       speechSynthesis.speak(utterance);
+    }
+  };
+
+  const handleMasteryUpdate = async (wordId: string, newLevel: number) => {
+    const success = await updateMasteryLevel(wordId, Math.max(0, Math.min(100, newLevel)));
+    if (!success) {
+      // エラーはstoreで管理されるので、必要に応じて追加の処理をここで行う
+      console.error('習得度の更新に失敗しました');
+    }
+  };
+
+  const handleDeleteWord = async (wordId: string) => {
+    if (confirm('この単語を削除しますか？')) {
+      const success = await deleteWord(wordId);
+      if (!success) {
+        console.error('単語の削除に失敗しました');
+      }
     }
   };
 
@@ -80,13 +142,19 @@ export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
                 <Volume2 className="h-4 w-4" />
               </Button>
             </div>
-            <p className="text-gray-600 mb-2">{word.japanese}</p>
+            <p className="text-muted-foreground mb-2">{word.japanese}</p>
             {word.pronunciation && (
-              <p className="text-sm text-gray-500 font-mono">[{word.pronunciation}]</p>
+              <p className="text-sm text-muted-foreground font-mono">
+                [{word.pronunciation}]
+              </p>
             )}
           </div>
           <div className="text-right">
-            <div className={`text-sm font-medium ${getMasteryColor(word.masteryLevel)}`}>
+            <div
+              className={`text-sm font-medium ${getMasteryColor(
+                word.masteryLevel
+              )}`}
+            >
               {word.masteryLevel}%
             </div>
             <Progress value={word.masteryLevel} className="w-16 h-2 mt-1" />
@@ -102,12 +170,25 @@ export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
           </div>
           <div className="flex items-center space-x-2">
             {word.lastReviewed && (
-              <div className="flex items-center text-xs text-gray-500">
+              <div className="flex items-center text-xs text-muted-foreground">
                 <Clock className="h-3 w-3 mr-1" />
                 {word.lastReviewed.toLocaleDateString()}
               </div>
             )}
-            <Button variant="ghost" size="sm">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => handleMasteryUpdate(word.id, word.masteryLevel + 10)}
+              title="習得度+10"
+            >
+              <TrendingUp className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => handleDeleteWord(word.id)}
+              title="削除"
+            >
               <Edit className="h-4 w-4" />
             </Button>
           </div>
@@ -116,54 +197,96 @@ export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
     </Card>
   );
 
+  // ローディング中の表示
+  if (loading && words.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">単語を読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 p-4 max-w-6xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">単語管理</h1>
-          <p className="text-gray-600">登録した英単語の管理と学習</p>
+          <h1 className="text-2xl font-bold text-foreground">単語管理</h1>
+          <p className="text-muted-foreground">登録した英単語を管理・学習</p>
         </div>
-        <Button onClick={() => onNavigate('add-word')} className="flex items-center space-x-2">
+        <Button
+          onClick={() => onNavigate("add-word")}
+          className="flex items-center space-x-2"
+        >
           <Plus className="h-4 w-4" />
           <span>単語を追加</span>
         </Button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Error Display */}
+      {error && (
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="p-4">
+            <div className="flex items-center space-x-2">
+              <div className="text-red-600">⚠️</div>
+              <div>
+                <p className="text-red-800 font-medium">エラーが発生しました</p>
+                <p className="text-red-600 text-sm">{error}</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setError(null)}
+                  className="mt-2"
+                >
+                  閉じる
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4 text-center">
             <BookOpen className="h-8 w-8 mx-auto mb-2 text-blue-600" />
             <div className="text-2xl font-bold">{words.length}</div>
-            <div className="text-sm text-gray-600">総単語数</div>
+            <div className="text-sm text-muted-foreground">総単語数</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <TrendingUp className="h-8 w-8 mx-auto mb-2 text-green-600" />
             <div className="text-2xl font-bold">
-              {Math.round(words.reduce((sum, word) => sum + word.masteryLevel, 0) / words.length)}%
+              {Math.round(
+                words.reduce((sum, word) => sum + word.masteryLevel, 0) /
+                  words.length
+              )}
+              %
             </div>
-            <div className="text-sm text-gray-600">平均習熟度</div>
+            <div className="text-sm text-muted-foreground">平均習得度</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <Star className="h-8 w-8 mx-auto mb-2 text-yellow-600" />
             <div className="text-2xl font-bold">
-              {words.filter(word => word.masteryLevel >= 80).length}
+              {words.filter((word) => word.masteryLevel >= 80).length}
             </div>
-            <div className="text-sm text-gray-600">習得済み</div>
+            <div className="text-sm text-muted-foreground">習得済み</div>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4 text-center">
             <Clock className="h-8 w-8 mx-auto mb-2 text-purple-600" />
             <div className="text-2xl font-bold">
-              {words.filter(word => word.masteryLevel < 60).length}
+              {words.filter((word) => word.masteryLevel < 60).length}
             </div>
-            <div className="text-sm text-gray-600">要復習</div>
+            <div className="text-sm text-muted-foreground">要復習</div>
           </CardContent>
         </Card>
       </div>
@@ -177,7 +300,7 @@ export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="英単語または日本語で検索..."
                   value={searchTerm}
@@ -190,11 +313,13 @@ export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
               {categories.map((category) => (
                 <Button
                   key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
+                  variant={
+                    selectedCategory === category ? "default" : "outline"
+                  }
                   size="sm"
                   onClick={() => setSelectedCategory(category)}
                 >
-                  {category === 'all' ? 'すべて' : category}
+                  {category === "all" ? "すべて" : category}
                 </Button>
               ))}
             </div>
@@ -206,9 +331,15 @@ export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
       <Tabs defaultValue="all" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="all">すべて ({filteredWords.length})</TabsTrigger>
-          <TabsTrigger value="beginner">初級 ({beginnerWords.length})</TabsTrigger>
-          <TabsTrigger value="intermediate">中級 ({intermediateWords.length})</TabsTrigger>
-          <TabsTrigger value="advanced">上級 ({advancedWords.length})</TabsTrigger>
+          <TabsTrigger value="beginner">
+            初級 ({beginnerWords.length})
+          </TabsTrigger>
+          <TabsTrigger value="intermediate">
+            中級 ({intermediateWords.length})
+          </TabsTrigger>
+          <TabsTrigger value="advanced">
+            上級 ({advancedWords.length})
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="mt-6">
@@ -247,10 +378,14 @@ export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
       {filteredWords.length === 0 && (
         <Card>
           <CardContent className="p-8 text-center">
-            <BookOpen className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">単語が見つかりません</h3>
-            <p className="text-gray-600 mb-4">検索条件を変更するか、新しい単語を追加してください。</p>
-            <Button onClick={() => onNavigate('add-word')}>
+            <BookOpen className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+            <h3 className="text-lg font-medium text-foreground mb-2">
+              単語が見つかりません
+            </h3>
+            <p className="text-muted-foreground mb-4">
+              検索条件を変更するか、新しい単語を追加してください。
+            </p>
+            <Button onClick={() => onNavigate("add-word")}>
               <Plus className="h-4 w-4 mr-2" />
               単語を追加
             </Button>
@@ -260,3 +395,4 @@ export const WordsScreen = ({ onNavigate }: WordsScreenProps) => {
     </div>
   );
 };
+
