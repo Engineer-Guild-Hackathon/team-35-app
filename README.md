@@ -26,10 +26,9 @@
 ## 技術スタック
 - フレームワーク: React / Expo
 - 言語:　TypeScript / React
-- スタイリング:　TailWind CSS
 - 認証・DBホスティング:　FireBase
 - API:　suno
-- デプロイ: Expo Application Services
+- デプロイ: FireBase
 
 ## 開発背景
 「勉強しなきゃ」と分かっていても、最初の一歩が重い学生は多くいます。
