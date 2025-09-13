@@ -4,7 +4,7 @@
   "description": "このリポジトリはハッカソン提出用の雛形です。以下の項目をすべて埋めてください。",
   "main": "index.js",
   "scripts": {
-    "build": "cd team-35 && expo export",
+    "build": "cd team-35 && npx expo export",
     "start": "cd team-35 && npm start"
   },
   "repository": {
